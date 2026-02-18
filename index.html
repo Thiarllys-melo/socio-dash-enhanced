@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socio-Dash - Gerenciador de Sindicatos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Login Section -->
+        <div id="loginSection" class="login-section">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1>🏢 Socio-Dash</h1>
+                    <p>Gerenciador de Sindicatos</p>
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuário</label>
+                        <input type="text" id="username" name="username" required placeholder="seu@email.com" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••" />
+                        <small id="loginError" class="error-message"></small>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe" name="rememberMe" />
+                            <span>Manter-me conectado</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                </form>
+                <div class="login-info">
+                    <p>Demo - Use: admin / admin123</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="dashboard-section" style="display: none;">
+            <div class="dashboard-container">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Socio-Dash</h2>
+                        <p id="userDisplay" class="user-display"></p>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <a href="#" class="nav-item active" data-view="dashboard">
+                            <span class="icon">📊</span>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="sindicatos">
+                            <span class="icon">🏢</span>
+                            <span>Sindicatos</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="usuarios">
+                            <span class="icon">👥</span>
+                            <span>Usuários</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="seguranca">
+                            <span class="icon">🔒</span>
+                            <span>Segurança</span>
+                        </a>
+                    </nav>
+                    <div class="sidebar-footer">
+                        <button id="logoutBtn" class="btn btn-secondary btn-block">Sair</button>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="main-content">
+                    <!-- Dashboard View -->
+                    <div id="dashboardView" class="view active">
+                        <div class="content-header">
+                            <h1>Dashboard</h1>
+                            <p class="subtitle">Bem-vindo ao painel de controle</p>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">🏢</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statSindicatos">0</div>
+                                    <div class="stat-label">Sindicatos</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">👥</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statUsuarios">0</div>
+                                    <div class="stat-label">Usuários</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🔒</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statBloqueados">0</div>
+                                    <div class="stat-label">Bloqueados</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⏰</div>
+                                <div class="stat-content">
+                                    <div class="stat-value" id="statTempo">00:00</div>
+                                    <div class="stat-label">Tempo Online</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sindicatos View -->
+                    <div id="sindicatosView" class="view">
+                        <div class="content-header">
+                            <h1>Gerenciar Sindicatos</h1>
+                            <button id="addSindicatoBtn" class="btn btn-primary">+ Novo Sindicato</button>
+                        </div>
+                        <div id="sindicatosList" class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>CNPJ</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Cadastro</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sindicatosTableBody">
+                                </tbody>
+                            </table>
+                            <div id="emptyState" class="empty-state">
+                                <p>📭 Nenhum sindicato cadastrado</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usuários View -->
+                    <div id="usuariosView" class="view">
+                        <div class="content-header">
+                            <h1>Gerenciar Usuários</h1>
+                            <button id="addUsuarioBtn" class="btn btn-primary">+ Novo Usuário</button>
+                        </div>
+                        <div id="usuariosList" class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Usuário</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Tentativas</th>
+                                        <th>Último Acesso</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuariosTableBody">
+                                </tbody>
+                            </table>
+                            <div id="emptyStateUsers" class="empty-state">
+                                <p>📭 Nenhum usuário cadastrado</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Segurança View -->
+                    <div id="segurancaView" class="view">
+                        <div class="content-header">
+                            <h1>Configurações de Segurança</h1>
+                        </div>
+                        <div class="security-grid">
+                            <div class="security-card">
+                                <h3>🔐 Política de Bloqueio</h3>
+                                <div class="security-item">
+                                    <label for="maxAttempts">Máximo de Tentativas</label>
+                                    <input type="number" id="maxAttempts" min="1" max="20" value="5" />
+                                </div>
+                                <div class="security-item">
+                                    <label for="lockoutTime">Tempo de Bloqueio (minutos)</label>
+                                    <input type="number" id="lockoutTime" min="1" max="120" value="15" />
+                                </div>
+                            </div>
+                            <div class="security-card">
+                                <h3>🛡️ Política de Senha</h3>
+                                <div class="security-item">
+                                    <label for="minPasswordLength">Comprimento Mínimo</label>
+                                    <input type="number" id="minPasswordLength" min="6" max="20" value="8" />
+                                </div>
+                                <div class="security-item">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requireUppercase" checked />
+                                        <span>Requer letras maiúsculas</span>
+                                    </label>
+                                </div>
+                                <div class="security-item">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requireNumbers" checked />
+                                        <span>Requer números</span>
+                                    </label>
+                                </div>
+                                <div class="security-item">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="requireSpecial" checked />
+                                        <span>Requer caracteres especiais</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="security-card">
+                                <h3>📋 Atividade de Segurança</h3>
+                                <div id="securityLog" class="security-log">
+                                </div>
+                            </div>
+                        </div>
+                        <button id="saveSecurity" class="btn btn-primary" style="margin-top: 20px;">Salvar Configurações</button>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cadastro Sindicato -->
+    <div id="sindicatoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Novo Sindicato</h2>
+                <button type="button" class="close-btn">&times;</button>
+            </div>
+            <form id="sindicatoForm" class="form">
+                <div class="form-group">
+                    <label for="sindicatoNome">Nome do Sindicato</label>
+                    <input type="text" id="sindicatoNome" required placeholder="Ex: Sindicato dos Trabalhadores" />
+                </div>
+                <div class="form-group">
+                    <label for="sindicatoCNPJ">CNPJ</label>
+                    <input type="text" id="sindicatoCNPJ" required placeholder="00.000.000/0000-00" />
+                </div>
+                <div class="form-group">
+                    <label for="sindicatoEmail">Email</label>
+                    <input type="email" id="sindicatoEmail" required placeholder="contato@sindicato.com" />
+                </div>
+                <div class="form-group">
+                    <label for="sindicatoFone">Telefone</label>
+                    <input type="tel" id="sindicatoFone" placeholder="(85) 9999-9999" />
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Senha Provisória -->
+    <div id="senhaProvisariaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Senha Provisória Gerada</h2>
+                <button type="button" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body password-modal">
+                <div class="password-info">
+                    <p class="info-text">Sindicato cadastrado com sucesso! Compartilhe a senha provisória abaixo com seu cliente.</p>
+                    <div class="sindicato-info">
+                        <p><strong>Sindicato:</strong> <span id="modalSindicatoNome"></span></p>
+                        <p><strong>Usuário:</strong> <span id="modalUsuarioLogin"></span></p>
+                    </div>
+                </div>
+                <div class="password-box">
+                    <div class="password-display">
+                        <span id="senhaProvisoria" class="password-text"></span>
+                        <button type="button" class="copy-btn" id="copyPasswordBtn" title="Copiar">
+                            <span class="copy-icon">📋</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="warning-box">
+                    <p><strong>⚠️ Importante:</strong></p>
+                    <ul>
+                        <li>A senha é válida por 24 horas</li>
+                        <li>Deve ser alterada no primeiro login</li>
+                        <li>Nunca compartilhe de forma insegura</li>
+                        <li>Se expirar, gere uma nova senha</li>
+                    </ul>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="enviarEmailBtn">Enviar por Email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmação Exclusão -->
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚠️ Confirmar Exclusão</h2>
+                <button type="button" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmDeleteMessage" class="confirm-message"></p>
+                <div class="backup-info">
+                    <p><strong>Dados serão arquivados em:</strong></p>
+                    <p id="backupPath" class="backup-path"></p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Confirmar Exclusão</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Alternar Senha -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Alterar Senha</h2>
+                <button type="button" class="close-btn">&times;</button>
+            </div>
+            <form id="changePasswordForm" class="form">
+                <div class="form-group">
+                    <label for="currentPassword">Senha Atual</label>
+                    <input type="password" id="currentPassword" required />
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha</label>
+                    <input type="password" id="newPassword" required />
+                    <small id="passwordStrength" class="password-strength"></small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Senha</label>
+                    <input type="password" id="confirmPassword" required />
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Alterar Senha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="security.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
